@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,5 +32,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test 
       run: |
-        python3 testIntegration.py
+        python3 ./backend/mainReciever.py
         python3 testUnit.py
+        python3 testIntegration.py
