@@ -1,11 +1,20 @@
 import pika
 import collectorWorker
 import analyzerWorker
+import os
+from dotenv import load_dotenv
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+load_dotenv()
+
+url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
+params = pika.URLParameters(url)
+connection = pika.BlockingConnection(params)
 channel = connection.channel()
 
 channel.exchange_declare(exchange='main_exchange', exchange_type='direct')
+
+channel.queue_declare(queue="collectorQ")
+channel.queue_declare(queue="analyzerQ")
 
 channel.queue_bind(exchange='main_exchange', queue="collectorQ", routing_key="collectorKey")
 channel.queue_bind(exchange='main_exchange', queue="analyzerQ", routing_key="analyzerKey")

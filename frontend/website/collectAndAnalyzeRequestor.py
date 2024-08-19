@@ -1,9 +1,15 @@
 import pika
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def sendRequest(body, queueName, routing_key):
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
+    params = pika.URLParameters(url)
+    connection = pika.BlockingConnection(params)
     channel = connection.channel()
 
     channel.exchange_declare(exchange='main_exchange', exchange_type='direct')
@@ -17,3 +23,5 @@ def sendRequest(body, queueName, routing_key):
     messageSentSuccess = True
 
     connection.close()
+
+    return messageSentSuccess
