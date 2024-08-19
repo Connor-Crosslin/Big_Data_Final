@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello, Flask!</title>
+    <title>My Debt App!</title>
 </head>
-<body>
-  {% for item in display_list %}
-    <h1>{{item}}!</h1>
-  {% endfor %}
-</body>
+
+  <table border= 1>
+    <tr>
+      <th>Ticker</th>
+      <th>As of Date</th>
+      <th>Debt to Asset Ratio</th>
+      <th>Debt to Equity Ratio</th>
+    </tr>
+    {% for item in display_list %}
+      <tr>
+        <td>{{item['_id']}}</td>
+        <td>{{item['date']}}</td>
+        <td>{{item['debtToAssets']}}</td>
+        <td>{{item['debtToEquity']}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
 </html>
