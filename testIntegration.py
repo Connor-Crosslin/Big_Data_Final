@@ -4,6 +4,7 @@ from frontend.website.dowCompanyFetcher import dowFetcher
 from subprocess import Popen
 import multiprocessing
 import time
+import os
 
 def startReciever():
     recieverProcess = Popen('py backend/mainReciever.py')
@@ -21,7 +22,7 @@ if __name__ == '__main__':
 
     time.sleep(30)
 
-    cluster = MongoClient("mongodb://localhost:27017/")
+    cluster = MongoClient(os.getenv('MONGO_URI'))
     database = cluster["analyzed_data_db"]
     collection = database["analyzed_data"]
 
