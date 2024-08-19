@@ -26,5 +26,5 @@ def main_page():
 
     return render_template("main_page.html", display_list = display_list)
 
-if __name__ == '__main__': 
-    app.run(debug=True)
+#if __name__ == '__main__': 
+#    app.run(debug=True)
