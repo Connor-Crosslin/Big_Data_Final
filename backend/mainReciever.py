@@ -3,32 +3,37 @@ import collectorWorker
 import analyzerWorker
 import os
 from dotenv import load_dotenv
+from flask import Flask
 
-load_dotenv()
+recieverApp = Flask(__name__)
 
-url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
-params = pika.URLParameters(url)
-connection = pika.BlockingConnection(params)
-channel = connection.channel()
+@recieverApp.route("/")
+def runReciever():
+    load_dotenv()
 
-channel.exchange_declare(exchange='main_exchange', exchange_type='direct')
+    url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
+    params = pika.URLParameters(url)
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
 
-channel.queue_declare(queue="collectorQ")
-channel.queue_declare(queue="analyzerQ")
+    channel.exchange_declare(exchange='main_exchange', exchange_type='direct')
 
-channel.queue_bind(exchange='main_exchange', queue="collectorQ", routing_key="collectorKey")
-channel.queue_bind(exchange='main_exchange', queue="analyzerQ", routing_key="analyzerKey")
+    channel.queue_declare(queue="collectorQ")
+    channel.queue_declare(queue="analyzerQ")
 
-#def collectorCallback(ch, method, properties, body):
-#    print(f" [x] COLLECTORCALLBACK {body}")
+    channel.queue_bind(exchange='main_exchange', queue="collectorQ", routing_key="collectorKey")
+    channel.queue_bind(exchange='main_exchange', queue="analyzerQ", routing_key="analyzerKey")
 
-#def analyzerCallback(ch, method, properties, body):
-#    print(f" [x] ANALYZER CALLBACKE {body}")
+    #def collectorCallback(ch, method, properties, body):
+    #    print(f" [x] COLLECTORCALLBACK {body}")
 
-channel.basic_consume(queue="collectorQ", on_message_callback=collectorWorker.callback, auto_ack=True)
-channel.basic_consume(queue="analyzerQ", on_message_callback=analyzerWorker.callback, auto_ack=True)
+    #def analyzerCallback(ch, method, properties, body):
+    #    print(f" [x] ANALYZER CALLBACKE {body}")
 
-print(' [*] Waiting for messages. To exit press CTRL+C')
+    channel.basic_consume(queue="collectorQ", on_message_callback=collectorWorker.callback, auto_ack=True)
+    channel.basic_consume(queue="analyzerQ", on_message_callback=analyzerWorker.callback, auto_ack=True)
 
-channel.start_consuming()
+    print(' [*] Waiting for messages. To exit press CTRL+C')
+
+    channel.start_consuming()
 
