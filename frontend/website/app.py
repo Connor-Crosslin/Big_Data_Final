@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-
 load_dotenv()
 
 cluster = MongoClient(os.getenv('MONGO_URI'))
