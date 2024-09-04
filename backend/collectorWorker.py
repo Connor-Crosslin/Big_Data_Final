@@ -17,8 +17,11 @@ def callback(ch, method, properties, body):
 
     stockDict = json.loads(body)
     
-    url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
-    params = pika.URLParameters(url)
+    #these lines are for running cloudAMQP
+    #url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
+    #params = pika.URLParameters(url)
+    
+    params = pika.ConnectionParameters(host=os.getenv('CLOUDAMPQ_URI')) #comment this out if using cloudAMPQ
     connection = pika.BlockingConnection(params)
     channel = connection.channel()
 

@@ -7,9 +7,13 @@ load_dotenv()
 
 def sendRequest(body, queueName, routing_key):
 
-    url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
-    params = pika.URLParameters(url)
-    connection = pika.BlockingConnection(params)
+    #these lines are for running on cloud:
+    #url = os.getenv('CLOUDAMPQ_URI', 'amqp://guest:guest@localhost:5672/%2f')
+    #params = pika.URLParameters(url)
+
+    params = pika.ConnectionParameters(host=os.getenv('CLOUDAMPQ_URI')) #comment this out if using cloudAMPQ
+
+    connection = pika.BlockingConnection(params) 
     channel = connection.channel()
 
     channel.exchange_declare(exchange='main_exchange', exchange_type='direct')

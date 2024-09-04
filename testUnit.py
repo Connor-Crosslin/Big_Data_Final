@@ -3,9 +3,6 @@ from frontend.website.dowCompanyFetcher import dowFetcher
 import unittest
 import json
 
-#from backend.analyzerWorker import callback as analyzerCallback
-#from backend.collectorWorker import callback as collectorCallback
-
 class TestDowFetcher(unittest.TestCase):
     def test_dow_fetcher(self):
         #make sure fetcher returns dictionary of size 30
